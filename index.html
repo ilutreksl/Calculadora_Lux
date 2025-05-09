@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Lux</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    h1 {
+      width: 100%;
+      text-align: center;
+      margin: 1.5rem 0 0.5rem;
+      color: #2c3e50;
+    }
+    .form-container {
+      flex: 1;
+      min-width: 300px;
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+    small {
+      color: #888;
+      font-size: 0.8rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.8rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    #resultado {
+      margin-top: 2rem;
+      background: #ecf0f1;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .normativa {
+      max-width: 350px;
+      background: #ffffff;
+      padding: 1rem 1.5rem;
+      border-left: 3px solid #3498db;
+      margin: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.03);
+    }
+    .normativa h2 {
+      font-size: 1.2rem;
+      margin-top: 0;
+      color: #3498db;
+    }
+    .normativa ul {
+      list-style: none;
+      padding: 0;
+    }
+    .normativa li {
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.3rem;
+    }
+    .normativa strong {
+      color: #2c3e50;
+    }
+
+    @media screen and (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+      .normativa {
+        margin: 0 auto 2rem;
+        border-left: none;
+        border-top: 3px solid #3498db;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado con logo -->
+  <header style="width: 100%; text-align: center; margin-top: 1.5rem;">
+  <img src="https://ilutrek.es/wp-content/uploads/2020/02/ilutrek-logo.png" alt="Logo Empresa" style="height: 30px; display: block; margin: 0 auto;">
+  <h1 style="margin: 0.5rem 0 0; color: #2c3e50;">Calculadora de Lux</h1>
+</header>
+
+
+  <div class="form-container">
+    <label>Lúmenes por metro de tira de led</label>
+    <input id="lumenes" type="number" placeholder="Ej: 4200" />
+
+    <label>Longitud de la tira LED (m)</label>
+    <input id="longitudTira" type="number" placeholder="Ej: 2" />
+
+    <label>Altura de instalación (m)</label>
+    <input id="alturaInstalacion" type="number" placeholder="Ej: 2.4" />
+
+    <label>Altura del plano a evaluar (m)</label>
+    <input id="alturaPlano" type="number" placeholder="Ej: 0.8" />
+
+    <label>Ángulo de apertura (grados)</label>
+    <input id="angulo" type="number" placeholder="Ej: 100" />
+
+    <label>Ancho del local (m)</label>
+    <input id="ancho" type="number" placeholder="Ej: 2" />
+
+    <label>Largo del local (m)</label>
+    <input id="largo" type="number" placeholder="Ej: 2" />
+
+    <label>Coeficiente de Utilización (CU)</label>
+    <input id="cu" type="number" step="0.01" placeholder="Ej: 0.8" />
+    <small>Si no se conoce, se usará el valor por defecto de 1</small>
+
+    <label>Factor de Mantenimiento (FM)</label>
+    <input id="fm" type="number" step="0.01" placeholder="Ej: 0.9" />
+    <small>Si no se conoce, se usará el valor por defecto de 1</small>
+
+    <button onclick="calcularLux()">Calcular</button>
+
+    <div id="resultado"></div>
+  </div>
+
+  <div class="normativa">
+    <h2>📘 Normativa EN 12464-1:2022</h2>
+    <ul>
+      <li><strong>Oficinas (trabajo general):</strong> ≥ 500 lux</li>
+      <li><strong>Recepciones:</strong> ≥ 300 lux</li>
+      <li><strong>Pasillos:</strong> ≥ 100 lux</li>
+      <li><strong>Escaleras:</strong> ≥ 150 lux</li>
+      <li><strong>Aseos:</strong> ≥ 200 lux</li>
+      <li><strong>Almacenes:</strong> ≥ 150 lux</li>
+      <li><strong>Zonas técnicas/talleres:</strong> ≥ 300–750 lux</li>
+	  <li><strong>Comedor:</strong> ≥ 350 lux</li>
+	  <li><strong>Habitaciones:</strong> ≥ 150 lux</li>
+    </ul>
+  </div>
+
+  <script>
+    function calcularLux() {
+      const lumenes = parseFloat(document.getElementById('lumenes').value);
+      const longitudTira = parseFloat(document.getElementById('longitudTira').value);
+      const hInstalacion = parseFloat(document.getElementById('alturaInstalacion').value);
+      const hPlano = parseFloat(document.getElementById('alturaPlano').value);
+      const angulo = parseFloat(document.getElementById('angulo').value);
+      const ancho = parseFloat(document.getElementById('ancho').value);
+      const largo = parseFloat(document.getElementById('largo').value);
+
+      const cuInput = parseFloat(document.getElementById('cu').value);
+      const fmInput = parseFloat(document.getElementById('fm').value);
+      const cu = isNaN(cuInput) ? 1 : cuInput;
+      const fm = isNaN(fmInput) ? 1 : fmInput;
+
+      if ([lumenes, longitudTira, hInstalacion, hPlano, angulo, ancho, largo].some(isNaN)) {
+        document.getElementById('resultado').innerHTML = "⚠️ Por favor, completa todos los campos obligatorios.";
+        return;
+      }
+
+      const areaLocal = ancho * largo;
+      const lumenesPorMetro = lumenes / longitudTira;
+      const lumenesUtiles = lumenesPorMetro * longitudTira * cu * fm;
+      const luxIdeal = lumenesUtiles / areaLocal;
+
+      const angRad = (angulo * Math.PI) / 180;
+      const tanAng = Math.tan(angRad / 2);
+
+      const alturaPlanoDesdeLuminaria = hInstalacion - hPlano;
+      const radioPlano = tanAng * alturaPlanoDesdeLuminaria;
+      const areaPlano = Math.PI * Math.pow(radioPlano, 2);
+      const luxPlano = lumenesUtiles / areaPlano;
+
+      const radioSuelo = tanAng * hInstalacion;
+      const areaSuelo = Math.PI * Math.pow(radioSuelo, 2);
+      const luxSuelo = lumenesUtiles / areaSuelo;
+
+      document.getElementById('resultado').innerHTML = `
+        <strong>🔎 Resultados:</strong><br/>
+        ➤ Lúmenes útiles (CU × FM): <strong>${lumenesUtiles.toFixed(1)} lm</strong><br/>
+        ➤ Lux sobre el área del local: <strong>${luxIdeal.toFixed(1)} lux</strong><br/>
+        ➤ Lux a ${hPlano} m de altura: <strong>${luxPlano.toFixed(1)} lux</strong><br/>
+        ➤ Lux a nivel del suelo: <strong>${luxSuelo.toFixed(1)} lux</strong>
+      `;
+    }
+  </script>
+</body>
+</html>
